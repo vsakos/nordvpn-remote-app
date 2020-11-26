@@ -1,0 +1,15 @@
+{
+  "name": "NordVPN Remote",
+  "short_name": "NordVPN Remote",
+  "description": "Control the NordVPN Remote Server",
+  "display": "standalone",
+  "background_color": "white",
+  "icons": [
+    {
+      "src": "icon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ],
+  "start_url": "/index.html"
+}

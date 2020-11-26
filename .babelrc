@@ -1,0 +1,45 @@
+{
+  "presets": ["@babel/preset-env", "@babel/preset-react"],
+  "plugins": [
+    [
+      "babel-plugin-import",
+      {
+        "libraryName": "@material-ui/core",
+        "libraryDirectory": "esm",
+        "camel2DashComponentName": false
+      },
+      "material-core"
+    ],
+    [
+      "babel-plugin-import",
+      {
+        "libraryName": "@material-ui/lab",
+        "libraryDirectory": "esm",
+        "camel2DashComponentName": false
+      },
+      "material-lab"
+    ],
+    [
+      "babel-plugin-import",
+      {
+        "libraryName": "@material-ui/icons",
+        "libraryDirectory": "esm",
+        "camel2DashComponentName": false
+      },
+      "material-icons"
+    ],
+    [
+      "babel-plugin-import",
+      {
+        "libraryName": "@material-ui/styles",
+        "libraryDirectory": "esm",
+        "camel2DashComponentName": false
+      },
+      "material-styles"
+    ],
+    "lodash",
+    "@babel/plugin-proposal-optional-chaining",
+    [ "@babel/plugin-proposal-decorators", { "legacy": true } ],
+    "@babel/plugin-proposal-class-properties"
+  ]
+}
