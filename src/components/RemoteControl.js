@@ -1,6 +1,22 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { AppBar, Toolbar, Typography, Box, Button, CircularProgress, IconButton, Menu, MenuItem } from '@material-ui/core';
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  Box,
+  Button,
+  CircularProgress,
+  IconButton,
+  Menu,
+  MenuItem,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  TextField
+} from '@material-ui/core';
 import { MoreVert, Refresh } from '@material-ui/icons';
 import { connect, disconnect, getCountries, getStatus } from '../api';
 import { Alert } from '@material-ui/lab';
@@ -20,7 +36,9 @@ export default class RemoteControl extends Component {
     },
     countries: [],
     connectingTo: null,
-    loading: false
+    loading: false,
+    serverInputForm: false,
+    customServer: ''
   };
 
   componentDidMount () {
@@ -56,6 +74,25 @@ export default class RemoteControl extends Component {
     })
   };
 
+  handleCustomServerChange = (e) => {
+    this.setState({
+      customServer: e.target.value
+    });
+  };
+
+  showServerInput = () => {
+    this.setState({
+      serverInputForm: true,
+      customServer: ''
+    });
+  };
+
+  hideServerInput = () => {
+    this.setState({
+      serverInputForm: false
+    });
+  };
+
   connectToCountry = async (country) => {
     this.setState({
       connectingTo: country.replace(/\_/g, ' '),
@@ -78,6 +115,13 @@ export default class RemoteControl extends Component {
         loading: false
       });
     }
+  };
+
+  connectToCustomServer = (e) => {
+    e.preventDefault();
+
+    this.hideServerInput();
+    this.connectToCountry(this.state.customServer);
   };
 
   disconnect = async () => {
@@ -122,6 +166,28 @@ export default class RemoteControl extends Component {
           </Toolbar>
         </AppBar>
 
+        <Dialog open={this.state.serverInputForm} onClose={this.hideServerInput} fullWidth>
+          <form onSubmit={this.connectToCustomServer}>
+            <DialogTitle>Connect to a server</DialogTitle>
+            <DialogContent>
+              <DialogContentText>
+                Enter the server ID
+              </DialogContentText>
+              <TextField
+                label='Server'
+                variant='outlined'
+                value={this.state.customServer}
+                onChange={this.handleCustomServerChange}
+                disabled={this.state.loading}
+                fullWidth/>
+            </DialogContent>
+            <DialogActions>
+              <Button type='button' onClick={this.hideServerInput}>Cancel</Button>
+              <Button type='submit' color='primary' disabled={!this.state.customServer}>Connect</Button>
+            </DialogActions>
+          </form>
+        </Dialog>
+
         <Box p={3}>
           {!!this.state.connectingTo && (
             <Box pb={2}>
@@ -141,7 +207,7 @@ export default class RemoteControl extends Component {
           </Box>
 
 
-          {this.state.status.connected && (
+          {this.state.status.connected ? (
             <>
               <Box display='flex' alignItems='flex-end'>
                 <Typography variant='subtitle1' component='span'>Country:</Typography>&nbsp;
@@ -168,6 +234,18 @@ export default class RemoteControl extends Component {
                 </Button>
               </Box>
             </>
+          ) : (
+            <Box pt={2}>
+              <Button
+                variant='outlined'
+                color='primary'
+                size='large'
+                onClick={this.showServerInput}
+                disabled={this.state.loading}
+                fullWidth>
+                {this.state.loading ? <CircularProgress size={26}/> : 'Connect to a specific server'}
+              </Button>
+            </Box>
           )}
 
           <br/><br/>
